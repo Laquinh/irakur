@@ -49,6 +49,7 @@
 	"type": "module",
 	"devDependencies": {
 		"@types/react-beautiful-dnd": "^13.1.8",
-		"@types/uuid": "^9.0.8"
+		"@types/uuid": "^9.0.8",
+		"css-loader": "^7.1.2"
 	}
 }

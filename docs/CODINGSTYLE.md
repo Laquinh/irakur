@@ -54,7 +54,7 @@ const shouldShowSpaces: boolean = ...;
 // Wrong
 if(name!==undefined)
 {
-   ...
+	...
 }
 
 const enteredText: string | null = prompt("Do you really want to delete language '" + language.name +

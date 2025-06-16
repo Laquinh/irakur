@@ -20,7 +20,7 @@ class CollectionsController
 		);
 	}
 
-    addCollectionsInBatch(names: string[]): void
+	addCollectionsInBatch(names: string[]): void
 	{
 		const valueList: string[] = [];
 		for (const name of names)
@@ -40,38 +40,38 @@ class CollectionsController
 		databaseManager.runQuery(dynamicQuery);
 	}
 
-    addTextToCollection(textId: number, collectionName: string): void
-    {
-        const collection: Collection | null = databaseManager.getFirstRow(
-            queries.findCollection,
-            {
-                name,
-            }
-        );
+	addTextToCollection(textId: number, collectionName: string): void
+	{
+		const collection: Collection | null = databaseManager.getFirstRow(
+			queries.findCollection,
+			{
+				name,
+			}
+		);
 
-        let collectionId: number;
+		let collectionId: number;
 
-        if (!collection)
-        {
-            this.addCollection(collectionName);
-            collectionId = databaseManager.getLastInsertId();
-        }
-        else
-        {
-            collectionId = collection.id;
-        }
+		if (!collection)
+		{
+			this.addCollection(collectionName);
+			collectionId = databaseManager.getLastInsertId();
+		}
+		else
+		{
+			collectionId = collection.id;
+		}
 
-        databaseManager.runQuery(
-            queries.addTextToCollection,
-            {
-                textId,
-                collectionId,
-            }
-        );
-    }
+		databaseManager.runQuery(
+			queries.addTextToCollection,
+			{
+				textId,
+				collectionId,
+			}
+		);
+	}
 
-    addTextToCollectionsInBatch(textId: number, collectionNames: string[]): void
-    {
+	addTextToCollectionsInBatch(textId: number, collectionNames: string[]): void
+	{
 		this.addCollectionsInBatch(collectionNames);
 
 		databaseManager.runQuery(
@@ -97,9 +97,9 @@ class CollectionsController
 		);
 
 		databaseManager.runQuery(dynamicQuery);
-    }
+	}
 
-    getAllCollections(): Collection[]
+	getAllCollections(): Collection[]
 	{
 		const collections: Collection[] = databaseManager.getAllRows(queries.getAllCollections);
 
@@ -118,17 +118,17 @@ class CollectionsController
 		return collections;
 	}
 
-    getTextsInCollection(collectionName: string): Text[]
-    {
-        const texts: Text[] = databaseManager.getAllRows(
-            queries.getTextsInCollection,
-            {
-                collectionName,
-            }
-        );
+	getTextsInCollection(collectionName: string): Text[]
+	{
+		const texts: Text[] = databaseManager.getAllRows(
+			queries.getTextsInCollection,
+			{
+				collectionName,
+			}
+		);
 
-        return texts;
-    }
+		return texts;
+	}
 }
 
 export { CollectionsController };

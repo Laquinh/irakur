@@ -6,11 +6,11 @@
 
 class PluginError extends Error
 {
-    constructor(moduleId: string, errorMessage: string) {
-        super("Plugin module " + moduleId + " threw the following error: " + errorMessage);
+	constructor(moduleId: string, errorMessage: string) {
+		super("Plugin module " + moduleId + " threw the following error: " + errorMessage);
 
-        Object.setPrototypeOf(this, PluginError.prototype);
-    }
+		Object.setPrototypeOf(this, PluginError.prototype);
+	}
 }
 
 export { PluginError };

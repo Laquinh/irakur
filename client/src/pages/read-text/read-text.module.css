@@ -1,0 +1,37 @@
+.readText {
+	display: flex;
+	flex-direction: row;
+}
+
+.readerContainer {
+	flex: 1;
+	width: 75%;
+	margin-right: 2%;
+	font-size: 1.5em;
+	height: 85vh;
+	text-align: justify;
+	padding: 1%;
+	margin-top: 1%;
+}
+
+.rightContainer {
+	position: sticky;
+	background-color: #FFFFFFFF;
+	border: 2px solid #DDDDDDFF;
+	border-radius: 25px;
+	padding: 2%;
+	width: 25%;
+	display: flex;
+	flex-direction: column;
+	margin: 3% 0;
+}
+
+.editWordContainer {
+	padding-bottom: 3%;
+}
+
+.dictionaryContainer {
+	width: 100%;
+	height: 100%;
+	max-height: 40%;
+}

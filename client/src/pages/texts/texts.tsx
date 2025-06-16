@@ -12,6 +12,7 @@ import { Text } from '@common/types';
 import { backendConnector } from '../../backend-connector';
 import { Loading } from '../../components/loading';
 import { TextCard } from '../../components/text-card';
+import styles from './texts.module.css';
 
 const Texts = (): JSX.Element => {
 	const [texts, setTexts] = useState<Text[] | null>(null);
@@ -24,6 +25,7 @@ const Texts = (): JSX.Element => {
 			backendConnector.getTexts(languageId).then(
 				(texts: Text[]): void => {
 					setTexts(texts);
+					console.log("Texts fetched:", texts);
 				}
 			);
 		},
@@ -41,18 +43,40 @@ const Texts = (): JSX.Element => {
 			<Helmet>
 				<title>Irakur - Texts</title>
 			</Helmet>
-			<h1>Irakur - Texts</h1>
-			<Link to="/texts/add">Add text</Link>
-			{
-				texts.map(
-					(text: Text) => (
-						<React.Fragment key={text.id}>
-							<TextCard text={text} />
-							<br />
-						</React.Fragment>
+			<div>
+				<Link to="/texts/add" className={styles.addTextLink}>Add text</Link>
+				<h1 className={styles.pageTitle}>Texts</h1>
+				{/*<Link to="/texts/add">Add text</Link>*/}
+				<h2 className={styles.folderName}>Books</h2>
+				<div className={styles.carousel}>
+				{
+					texts.map(
+						(text: Text) => (
+							<React.Fragment key={text.id}>
+								<TextCard text={text} />
+								<br />
+							</React.Fragment>
+						)
 					)
-				)
-			}
+				}
+				</div>
+
+				<div className={styles.separator}></div>
+
+				<h2 className={styles.folderName}>News</h2>
+				<div className={styles.carousel}>
+				{
+					texts.map(
+						(text: Text) => (
+							<React.Fragment key={text.id}>
+								<TextCard text={text} />
+								<br />
+							</React.Fragment>
+						)
+					)
+				}
+				</div>
+			</div>
 
 			<Outlet />
 		</HelmetProvider>

@@ -18,6 +18,8 @@ import { ReadText } from './pages/read-text';
 import { Start } from './pages/start';
 import { Statistics } from './pages/statistics';
 import { Texts } from './pages/texts';
+import './styles/globals.module.css';
+import './styles/variables.module.css';
 
 const App = (): JSX.Element => {
 	return (

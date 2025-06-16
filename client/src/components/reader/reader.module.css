@@ -1,0 +1,76 @@
+.newMultiword {
+    border-radius: .25rem;
+    cursor: pointer;
+    box-shadow: 0 0 0 2px #00000066;
+}
+
+.multiword {
+    border-radius: .25rem;
+    cursor: pointer;
+}
+
+.word {
+    background-color: 2s ease-out;
+    border-radius: .25rem;
+    cursor: pointer;
+}
+
+.selected {
+    box-shadow: 0 0 0 2px #00000066;
+}
+
+.status0, .multiwordStatus0 {
+    background-color: var(--status0);
+}
+.status1, .multiwordStatus1 {
+    background-color: var(--status1);
+}
+.status2, .multiwordStatus2 {
+    background-color: var(--status2);
+}
+.status3, .multiwordStatus3 {
+    background-color: var(--status3);
+}
+.status4, .multiwordStatus4 {
+    background-color: var(--status4);
+}
+.status5, .multiwordStatus5 {
+    background-color: var(--status5);
+}
+.status99, .multiwordStatus99 {
+    background-color: var(--status99);
+}
+.status98, .multiwordStatus98 {
+    background-color: var(--status98);
+}
+.status97, .multiwordStatus97 {
+    background-color: var(--status97);
+}
+
+.multiwordStatus0 {
+    background-color: var(--status0);
+}
+.multiwordStatus1 {
+    background-color: var(--status1);
+}
+.multiwordStatus2 {
+    background-color: var(--status2);
+}
+.multiwordStatus3 {
+    background-color: var(--status3);
+}
+.multiwordStatus4 {
+    background-color: var(--status4);
+}
+.multiwordStatus5 {
+    background-color: var(--status5);
+}
+.multiwordStatus99 {
+    background-color: var(--status99);
+}
+.multiwordStatus98 {
+    background-color: var(--status98);
+}
+.multiwordStatus97 {
+    background-color: var(--status97);
+}

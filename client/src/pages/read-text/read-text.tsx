@@ -14,6 +14,7 @@ import { Dictionary } from '../../components/dictionary';
 import { EditWord } from '../../components/edit-word';
 import { Loading } from '../../components/loading';
 import { Reader } from '../../components/reader';
+import styles from './read-text.module.css';
 
 const ReadText = (): JSX.Element => {
 	const [textData, setTextData] = useState<Text | null>(null);
@@ -68,41 +69,23 @@ const ReadText = (): JSX.Element => {
 				<title>Irakur - Read { textData.title }</title>
 			</Helmet>
 
-			<div style={{ display: 'flex', margin: '2%' }}>
-				<div style={{
-					flex: 1,
-					width: '75%',
-					marginRight: '2%',
-					fontSize: '1.5em',
-					height: '85vh',
-					textAlign: 'justify',
-					padding: '1%',
-					marginTop: '1%',
-				}}>
+			<div className={styles.readText}>
+				<div className={styles.readerContainer}>
 					<Reader
 						textData={textData}
 						languageData={languageData}
 						onWordClick={updateEditWord}
 					/>
 				</div>
-				<div style={{
-					position: 'sticky',
-					backgroundColor: '#FFFFFFFF',
-					border: '2px solid #DDDDDDFF',
-					borderRadius: '25px',
-					padding: '2%',
-					width: '25%',
-					display: 'flex',
-					flexDirection: 'column',
-				}}>
-					<div style={{ paddingBottom: '3%' }}>
+				<div className={styles.rightContainer}>
+					<div className={styles.editWordContainer}>
 						<EditWord
 							content={selectedWordContent}
 							onWordUpdate={selectedWordUpdateCallback || (() => {console.log('no callback');})}
 							languageData={languageData}
 						/>
 					</div>
-					<div style={{ width: '100%', height: '100%', maxHeight: '40%' }}>
+					<div className={styles.dictionaryContainer}>
 						<Dictionary languageData={languageData} content={selectedWordContent || ''}/>
 					</div>
 				</div>

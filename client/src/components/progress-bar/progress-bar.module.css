@@ -1,0 +1,12 @@
+.container {
+	width: 100%;
+	height: 20px;
+	background-color: var(--primary-color);
+	border-radius: 10px;
+	overflow: hidden;
+}
+
+.filler {
+	height: 100%;
+	background-color: var(--secondary-color);
+}

@@ -1,0 +1,76 @@
+.textCard {
+	width: max(15%, 150px);
+	height: 200px;
+	padding: 0 10px;
+	/*border: 1px solid var(--primary-color);*/
+	border-radius: 5px;
+	box-sizing: border-box;
+	position: relative;
+	background-color: var(--high-contrast-background-color);
+	box-shadow: 0 2px 4px rgb(from var(--primary-color) r g b / 0.7);
+
+	transition: width 0.3s ease, height 0.3s ease, box-shadow 0.3s ease;
+	grid-auto-rows: 1fr;
+	display: flex;
+	flex-direction: column;
+}
+
+.textCard:hover {
+	box-shadow: 0 4px 8px rgb(from var(--primary-color) r g b / 0.9);
+}
+
+.buttonStack {
+	position: absolute;
+	top: 15px;
+	right: 5px;
+	display: flex;
+	gap: 5px;
+	flex-direction: column;
+}
+
+.iconButton {
+	background-color: transparent;
+	border: none;
+	cursor: pointer;
+	width: 20px;
+	height: 20px;
+}
+
+.icon {
+	width: 100%;
+	height: 100%;
+}
+
+.readButton {
+	background-color: var(--primary-color);
+	border-radius: 5px;
+	width: 100%;
+	height: 40px;
+	margin: auto;
+	display: flex;
+	text-align: center;
+	align-items: center;
+	justify-content: center;
+	position: absolute;
+	bottom: 10px;
+	width: calc(100% - 20px);
+	text-decoration: none;
+	color: var(--text-color);
+	font-weight: bold;
+	font-size: 20px;
+	transition: background-color 0.3s ease;
+}
+
+.readButton:hover {
+	background-color: var(--secondary-color);
+	transition: background-color 0.3s ease;
+}
+
+.title {
+	font-size: 19px;
+	font-weight: bold;
+	margin-top: 10px;
+	color: var(--text-color);
+	width: 90%;
+	height: 30px;
+}

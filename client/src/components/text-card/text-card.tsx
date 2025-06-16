@@ -8,6 +8,10 @@ import { Link } from 'react-router-dom';
 
 import { Text } from '@common/types';
 import { backendConnector } from '../../backend-connector';
+import styles from './text-card.module.css';
+import gearIcon from '../../assets/icons/Gear_icon_svg.svg';
+import trashIcon from '../../assets/icons/Font_Awesome_5_solid_trash-alt.svg';
+import { ProgressBar } from '../progress-bar';
 
 const TextCard = ({ text }: { text: Text }): JSX.Element => {
 	const handleDelete = async (): Promise<void> => {
@@ -30,15 +34,23 @@ const TextCard = ({ text }: { text: Text }): JSX.Element => {
 	};
 
 	return (
-		<div>
-			<p>Title: {text.title}</p>
-			<p>ID: {text.id}</p>
-			<p>Language: {text.languageId}</p>
-			<Link to={`/texts/edit/${text.id}`}>Edit</Link>
-			&nbsp;&nbsp;&nbsp;&nbsp;
-			<Link to={`/texts/read/${text.id}`}>Read</Link>
-			&nbsp;&nbsp;&nbsp;&nbsp;
-			<button onClick={handleDelete}>Delete</button>
+		<div className={styles.textCard}>
+			<div className={styles.buttonStack}>
+				<Link className={styles.iconButton} to={`/texts/edit/${text.id}`}>
+					<img className={styles.icon} src={gearIcon}/>
+				</Link>
+				<button className={styles.iconButton} onClick={handleDelete}>
+					<img className={styles.icon} src={trashIcon}/>
+				</button>
+			</div>
+			<h3 className={styles.title}>
+				{text.title.length > 40
+					? text.title.substring(0, 40) + '...'
+					: text.title}
+			</h3>
+			<p className={styles.language}>Language: {text.languageId}</p>
+			<ProgressBar progress={text.progress} />
+			<Link className={styles.readButton} to={`/texts/read/${text.id}`}>Read</Link>
 		</div>
 	);
 };

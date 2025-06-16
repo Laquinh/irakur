@@ -11,6 +11,8 @@ import { Language, ReducedWordData, Text } from '@common/types';
 import { getUnixTime,tokenizeString } from '../../../../common/utils';
 import { backendConnector } from '../../backend-connector';
 import { Loading } from '../../components/loading';
+import styles from './reader.module.css';
+import { ProgressBar } from '../progress-bar';
 
 // https://stackoverflow.com/a/3169849
 const clearSelection = (): void => {
@@ -86,7 +88,7 @@ const getSelectionElements = (
 }
 
 const clearNewMultiword = (): void => {
-	const newMultiwordElements = document.getElementsByClassName('new-multiword') as HTMLCollectionOf<HTMLElement>;
+	const newMultiwordElements = document.getElementsByClassName(styles.newMultiword) as HTMLCollectionOf<HTMLElement>;
 	if (newMultiwordElements.length > 0)
 	{
 		const parentElement = newMultiwordElements[0].parentElement;
@@ -102,18 +104,13 @@ const clearNewMultiword = (): void => {
 };
 
 const convertSpanToNewMultiword = (span: HTMLElement): void => {
-	span.className = "new-multiword";
-	span.style.borderRadius = ".25rem",
-	span.style.cursor = "pointer",
-	span.style.boxShadow = "0 0 0 2px #00000066";
+	span.className = styles.newMultiword;
 };
 
 const convertSpanToSavedMultiword = (span: HTMLElement, status: number): void => {
-	span.className = "multiword";
-	span.style.borderRadius = ".25rem",
-	span.style.cursor = "pointer",
-	span.style.backgroundColor = getStyle(status);
-	span.style.boxShadow = "0 0 0 2px " + getStyle(status);
+	span.className = styles.multiword;
+	
+	span.className = styles[`multiwordStatus${status}`];
 
 	span.setAttribute("data-status", status.toString());
 };
@@ -142,6 +139,7 @@ const statusStyles: Record<string, string> = {
 	'5': '#DDFFDDFF',
 	'99': '#FFFFFF00',
 	'98': '#FFFFFF00',
+	'97': '#FFFFFF00',
 };
 
 const getStyle = (status: number): string => {
@@ -410,9 +408,7 @@ const Reader = (
 			else if (selectedElements.length > 0) {
 				clearSelection();
 
-				parentElement.style.borderRadius = ".25rem",
-				parentElement.style.cursor = "pointer",
-				parentElement.style.boxShadow = "0 0 0 2px #00000066";
+				parentElement.className = styles.newMultiword;
 				setSelectedWord(parentElement);
 
 				const onMultiwordUpdated = () => (content: string, status: number) => {
@@ -430,9 +426,7 @@ const Reader = (
 						if (getElementsContent(followingElements) === content)
 						{
 							const multiword = firstElements[i].parentElement as HTMLElement;
-							multiword.style.transition = "background-color 0.3s ease-out";
-							multiword.style.backgroundColor = getStyle(status);
-							multiword.style.boxShadow = "0 0 0 2px " + getStyle(status);
+							multiword.className = `${styles.multiword} ${styles[`multiwordStatus${status}`]}`;
 							multiword.dataset.status = status.toString();
 						}
 					}
@@ -460,7 +454,7 @@ const Reader = (
 	);
 
 	//const spaceStyle: React.CSSProperties = { fontSize: (shouldShowSpaces ? undefined : 0) };
-	const whitespaceRender = (word: ReducedWordData): JSX.Element  =>
+	const whitespaceRender = (word: ReducedWordData): JSX.Element =>
 	{
 		if (languageData.shouldShowSpaces)
 		{
@@ -521,16 +515,12 @@ const Reader = (
 				<span
 					key={word.index}
 					id={id}
-					className="multiword"
+					className={
+						`${styles.multiword} ${styles[`multiwordStatus${word.status}`] || styles.multiwordStatus0}`
+					}
 					data-index={word.index}
 					data-status={word.status}
 					data-type={word.type}
-					style={{
-						backgroundColor: getStyle(word.status ?? 0),
-						borderRadius: ".25rem",
-						cursor: "pointer",
-						boxShadow: "0 0 0 2px " + getStyle(word.status ?? 0),
-					}}
 				>{tokensInside}</span>
 			);
 		}
@@ -544,20 +534,20 @@ const Reader = (
 				<span
 					key={word.index}
 					id={id}
-					className="word"
+					className={
+						[
+							styles.word,
+							styles[`status${word.status}`] || styles.status0,
+							Number(selectedWord?.dataset.index) === word.index ? styles.selected : ''
+						].join(' ')
+					}
 					data-content={word.content.toLowerCase()}
 					data-index={word.index}
 					data-status={word.status}
 					data-type={word.type}
-					style={{
-						backgroundColor: getStyle(word.status ?? 0),
-						borderRadius: ".25rem",
-						cursor: "pointer",
-					}}
 					onClick={
 						(event: React.MouseEvent<HTMLElement>): void => {
 							const element = document.getElementById(id) as HTMLElement;
-							element.style.boxShadow = "0 0 0 2px #00000066";
 							setSelectedWord(element);
 							
 							onWordClick(word.content, onWordUpdateCallback);
@@ -578,6 +568,12 @@ const Reader = (
 		<div ref={ref}>
 			<span className="animation-fixer" style={{ backgroundColor: getStyle(98) }}></span>
 			<h1>{textData.title}</h1>
+			<div>
+				{/*<span className*/}
+				<ProgressBar
+					progress={currentPage/(textData.numberOfPages ?? Infinity)}
+				/>
+			</div>
 			<h4>Page: {currentPage}</h4>
 			<div className="word-container" style={{ height: '60vh', overflowY: 'auto' }}>
 				{

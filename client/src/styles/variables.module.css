@@ -1,0 +1,17 @@
+:root {
+	--primary-color: #C0D0E0;
+	--secondary-color: #80C0C0;
+	--text-color: #224444;
+	--background-color: #F5F5F5;
+	--high-contrast-background-color: #FAFAFE;
+
+	--status0: #ADDFF4FF;
+	--status1: #F5B8A9FF;
+	--status2: #F5CCA9FF;
+	--status3: #F5E1A9FF;
+	--status4: #F5F3A9FF;
+	--status5: #DDFFDDFF;
+	--status99: #FFFFFF00;
+	--status98: #FFFFFF00;
+	--status97: #FFFFFF00;
+}
