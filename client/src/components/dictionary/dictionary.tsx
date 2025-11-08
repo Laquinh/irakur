@@ -5,12 +5,12 @@
  */
 
 import { Language } from '@common/types';
+import styles from './dictionary.module.css';
 
 const Dictionary = ({ languageData, content }: { languageData: Language, content: string }): JSX.Element => {
-	const scale = 0.95;
-
 	return (
 		<iframe
+			className={styles.dictionary}
 			src={
 				languageData.dictionaryUrl.replace(
 					'%s',
@@ -20,19 +20,6 @@ const Dictionary = ({ languageData, content }: { languageData: Language, content
 					) || ''
 				)
 			}
-			style={{
-				width: `${100/scale}%`,
-				height: `${40/scale}%`,
-				position: "absolute",
-				left: "0",
-				top: "60%",
-				transformOrigin: "0 0",
-				scale: `${scale}`,
-				border: "none",
-				boxShadow: "0 0 0 2px #DDDDDDFF",
-				borderRadius: "0.5rem",
-				marginTop: "0.5rem",
-			}}
 		/>
 	);
 };

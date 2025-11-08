@@ -8,6 +8,7 @@ import { useEffect, useRef, useState } from 'react';
 import { v4 as uuid } from 'uuid';
 
 import { Language, ReducedWordData, Text } from '@common/types';
+import styles from './reader.module.css';
 import { getUnixTime,tokenizeString } from '../../../../common/utils';
 import { backendConnector } from '../../backend-connector';
 import { Loading } from '../../components/loading';
@@ -102,19 +103,13 @@ const clearNewMultiword = (): void => {
 };
 
 const convertSpanToNewMultiword = (span: HTMLElement): void => {
-	span.className = "new-multiword";
-	span.style.borderRadius = ".25rem",
-	span.style.cursor = "pointer",
-	span.style.boxShadow = "0 0 0 2px #00000066";
+	span.className = "new-multiword " + styles.newMultiword;
 };
 
 const convertSpanToSavedMultiword = (span: HTMLElement, status: number): void => {
-	span.className = "multiword";
-	span.style.borderRadius = ".25rem",
-	span.style.cursor = "pointer",
-	span.style.backgroundColor = getStyle(status);
-	span.style.boxShadow = "0 0 0 2px " + getStyle(status);
-
+	span.className = "multiword " + styles.multiword;
+	span.style.setProperty('--status', `var(--status${status ?? 0})`);
+	span.style.setProperty('--transitionDuration', `0.3s`);
 	span.setAttribute("data-status", status.toString());
 };
 
@@ -132,21 +127,6 @@ const insertMultiword = (
 	parentElement.insertBefore(newParent, tempSpan);
 	parentElement.removeChild(tempSpan);
 }
-
-const statusStyles: Record<string, string> = {
-	'0': '#ADDFF4FF',
-	'1': '#F5B8A9FF',
-	'2': '#F5CCA9FF',
-	'3': '#F5E1A9FF',
-	'4': '#F5F3A9FF',
-	'5': '#DDFFDDFF',
-	'99': '#FFFFFF00',
-	'98': '#FFFFFF00',
-};
-
-const getStyle = (status: number): string => {
-	return statusStyles[status.toString()] || '#FFFFFF00';
-};
 
 const Reader = (
 	{
@@ -225,12 +205,6 @@ const Reader = (
 
 		setCurrentPage(pagePosition);
 
-		document.querySelectorAll<HTMLElement>('.word').forEach(
-			(element: HTMLElement): void => {
-				element.style.transition = "none";
-			}
-		);
-
 		setIsLoading(false);
 		setAreButtonsDisabled(false);
 	}
@@ -294,8 +268,8 @@ const Reader = (
 					for (let i = 0; i < wordElements.length; i++)
 					{
 						wordElements[i].dataset.status = status.toString();
-						wordElements[i].style.transition = "background-color 2s ease-out";
-						wordElements[i].style.backgroundColor = getStyle(status);
+						wordElements[i].style.setProperty('--transitionDuration', '2s');
+						wordElements[i].style.setProperty('--status', `var(--status${status ?? 0})`);
 					}
 				}
 
@@ -311,8 +285,8 @@ const Reader = (
 		
 		for (let i = 0; i < wordElements.length; i++)
 		{
-			wordElements[i].style.transition = "background-color 0.3s ease-out";
-			wordElements[i].style.backgroundColor = getStyle(status);
+			wordElements[i].style.setProperty('--transitionDuration', '0.3s');
+			wordElements[i].style.setProperty('--status', `var(--status${status ?? 0})`);
 			wordElements[i].dataset.status = status.toString();
 		}
 
@@ -322,24 +296,15 @@ const Reader = (
 	useEffect(
 		(): void => {
 			loadPage(textData.id, currentPage);
-
-			// For some reason, the first animation glitches.
-			// We force this invisible animation so the subsequent ones work.
-			const animationFixers = document.getElementsByClassName('animation-fixer') as HTMLCollectionOf<HTMLElement>;
-			if (animationFixers.length > 0)
-			{
-				animationFixers[0].style.transition = "background-color 0.5s ease-out";
-				animationFixers[0].style.backgroundColor = getStyle(99);
-			}
 		},
 		[]
 	);
 
 	const handleMouseDown = (event: MouseEvent): void => {
-		console.log(".");
 		if (selectedWord !== null) {
-			selectedWord.style.boxShadow = "none";
+			selectedWord.classList.remove(styles.selectedWord);
 		}
+
 		setSelectedWord(null);
 
 		clearNewMultiword();
@@ -371,9 +336,15 @@ const Reader = (
 				languageData.alphabet,
 				languageData.intrawordPunctuation
 			);
+
+			if (selectedElements.length == 0)
+			{
+				return;
+			}
+
 			const parentElement = selectedElements[0].parentElement!;
 
-			if (selectedElements.length > 0 && parentElement?.dataset.type !== "multiword") {
+			if (parentElement?.dataset.type !== "multiword") {
 				const newSpan = document.createElement('span');
 				convertSpanToNewMultiword(newSpan);
 				setSelectedWord(newSpan);
@@ -407,12 +378,10 @@ const Reader = (
 				const elementsContent = getElementsContent(selectedElements);
 				onWordClick(elementsContent, onMultiwordSaved);
 			}
-			else if (selectedElements.length > 0) {
+			else {
 				clearSelection();
 
-				parentElement.style.borderRadius = ".25rem",
-				parentElement.style.cursor = "pointer",
-				parentElement.style.boxShadow = "0 0 0 2px #00000066";
+				parentElement.classList.add(styles.selectedWord);
 				setSelectedWord(parentElement);
 
 				const onMultiwordUpdated = () => (content: string, status: number) => {
@@ -430,9 +399,8 @@ const Reader = (
 						if (getElementsContent(followingElements) === content)
 						{
 							const multiword = firstElements[i].parentElement as HTMLElement;
-							multiword.style.transition = "background-color 0.3s ease-out";
-							multiword.style.backgroundColor = getStyle(status);
-							multiword.style.boxShadow = "0 0 0 2px " + getStyle(status);
+							multiword.style.setProperty('--transitionDuration', '0.3s');
+							multiword.style.setProperty('--status', `var(--status${status ?? 0})`);
 							multiword.dataset.status = status.toString();
 						}
 					}
@@ -477,14 +445,11 @@ const Reader = (
 		{
 			return (
 				<span
-					className="whitespace"
+					className={"whitespace " + styles.invisibleWhitespace}
 					data-index={word.index}
 					data-content=" "
 					data-type="whitespace"
 					key={word.index}
-					style={{
-						fontSize: 0,
-					}}
 				>
 					{' '}
 				</span>
@@ -496,7 +461,7 @@ const Reader = (
 		let renderedElement;
 		if (word.content === '\n')
 		{
-			renderedElement = <br key={word.index} data-index={word.index} style={{ marginBottom: "1rem" }}/>;
+			renderedElement = <br className={styles.lineBreak} key={word.index} data-index={word.index}/>;
 		}
 		else if (word.type === 'whitespace')
 		{
@@ -519,18 +484,15 @@ const Reader = (
 			const id = uuid();
 			renderedElement = (
 				<span
+					className={"multiword " + styles.multiword}
+					style={{
+						'--status': `var(--status${word.status ?? 0})`
+					} as React.CSSProperties}
 					key={word.index}
 					id={id}
-					className="multiword"
 					data-index={word.index}
 					data-status={word.status}
 					data-type={word.type}
-					style={{
-						backgroundColor: getStyle(word.status ?? 0),
-						borderRadius: ".25rem",
-						cursor: "pointer",
-						boxShadow: "0 0 0 2px " + getStyle(word.status ?? 0),
-					}}
 				>{tokensInside}</span>
 			);
 		}
@@ -540,24 +502,26 @@ const Reader = (
 				onWordUpdate(word.index, content, status);
 			}
 			const id = uuid();
+			console.log("word: " + word.index + " /// " + ((parseInt(selectedWord?.dataset.index || "") == word.index) ? styles.selectedWord : ''));
 			renderedElement = (
 				<span
 					key={word.index}
 					id={id}
-					className="word"
+					className={"word "
+						+ styles.word
+						+ ' '
+						+ ((parseInt(selectedWord?.dataset.index || "") == word.index) ? styles.selectedWord : '')
+					}
+					style={{
+						'--status': `var(--status${word.status ?? 0})`
+					} as React.CSSProperties}
 					data-content={word.content.toLowerCase()}
 					data-index={word.index}
 					data-status={word.status}
 					data-type={word.type}
-					style={{
-						backgroundColor: getStyle(word.status ?? 0),
-						borderRadius: ".25rem",
-						cursor: "pointer",
-					}}
 					onClick={
 						(event: React.MouseEvent<HTMLElement>): void => {
 							const element = document.getElementById(id) as HTMLElement;
-							element.style.boxShadow = "0 0 0 2px #00000066";
 							setSelectedWord(element);
 							
 							onWordClick(word.content, onWordUpdateCallback);
@@ -576,21 +540,14 @@ const Reader = (
 
 	return (
 		<div ref={ref}>
-			<span className="animation-fixer" style={{ backgroundColor: getStyle(98) }}></span>
 			<h1>{textData.title}</h1>
 			<h4>Page: {currentPage}</h4>
-			<div className="word-container" style={{ height: '60vh', overflowY: 'auto' }}>
+			<div className={"word-container " + styles.wordContainer}>
 				{
 					words.map(renderWord)
 				}
 			</div>
-			<div
-				className="buttons-container"
-				style={{
-					position: "sticky",
-					bottom: "0",
-				}}
-			>
+			<div className={"buttons-container " + styles.buttonsContainer}>
 				<button
 					disabled={currentPage === 1 || areButtonsDisabled}
 					onClick={(): void => {loadPage(textData.id, currentPage-1)}}

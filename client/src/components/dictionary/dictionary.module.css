@@ -1,0 +1,14 @@
+.dictionary
+{
+	width: calc(100% / 0.95);
+	height: calc(40% / 0.95);
+	scale: 0.95;
+    position: absolute;
+	left: 0;
+	top: 60%;
+	transform-origin: 0 0;
+    border: none;
+    box-shadow: 0 0 0 2px #DDDDDDFF;
+    border-radius: 0.5rem;
+    margin-top: 0.5rem;
+}

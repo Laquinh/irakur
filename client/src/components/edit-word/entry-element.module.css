@@ -1,0 +1,21 @@
+.reading
+{
+    width: 60%;
+    background-color: #FFFFFFCC;
+    border: none;
+    border-radius: 0.5rem;
+    border-bottom: 1px solid #00000066;
+    padding: 0.33rem;
+}
+
+.meaning
+{
+    width: 100%;
+    background-color: #FFFFFFCC;
+    border: none;
+    border-radius: 0.5rem;
+    border-bottom: 1px solid #00000066;
+    padding: 0.33rem;
+    height: 3rem;
+    font-size: 1rem;
+}

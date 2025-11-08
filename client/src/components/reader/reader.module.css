@@ -1,0 +1,50 @@
+.lineBreak
+{
+    margin-bottom: 1rem;
+}
+
+.invisibleWhitespace
+{
+    font-size: 0;
+}
+
+.newMultiword
+{
+	border-radius: .25rem;
+	cursor: pointer;
+	box-shadow: 0 0 0 2px #00000066;
+}
+
+.multiword
+{
+    border-radius: .25rem;
+    cursor: pointer;
+    background-color: var(--status);
+    box-shadow: 0 0 0 2px var(--status);
+    transition: background-color var(--transitionDuration) ease-out;
+}
+
+.word
+{
+    border-radius: .25rem;
+    cursor: pointer;
+    background-color: var(--status);
+    transition: background-color var(--transitionDuration) ease-out;
+}
+
+.selectedWord
+{
+    box-shadow: 0 0 0 2px #00000066;
+}
+
+.wordContainer
+{
+    height: 60vh;
+    overflow-y: auto;
+}
+
+.buttonsContainer
+{
+    position: sticky;
+	bottom: 0;
+}

@@ -8,6 +8,8 @@ import React, { useEffect, useState } from 'react';
 import { v4 as uuid } from 'uuid';
 
 import { Entry, Language } from '@common/types';
+import styles from './edit-word.module.css';
+import globalStyles from './../../styles/globals.module.css';
 import { getUnixTime } from '../../../../common/utils';
 import { backendConnector } from '../../backend-connector';
 import { Loading } from '../loading';
@@ -24,25 +26,10 @@ const statusNames: Record<string, string> = {
 	'98': 'Ignore',
 }
 
-const statusStyles: Record<string, string> = {
-	'0': '#ADDFF4FF',
-	'1': '#F5B8A9FF',
-	'2': '#F5CCA9FF',
-	'3': '#F5E1A9FF',
-	'4': '#F5F3A9FF',
-	'5': '#DDFFDDFF',
-	'99': '#FFFFFFFF',
-	'98': '#FFFFFFFF',
-}
-
 const emptyEntry: Entry = {
 	meaning: '',
 	reading: '',
 };
-
-const getStyle = (status: number): string => {
-	return statusStyles[status.toString()] || '#FFFFFFFF';
-}
 
 const EditWord = (
 	{
@@ -197,6 +184,7 @@ const EditWord = (
 	return (
 		<form onSubmit={handleSubmit}>
 			<input
+				className={styles.wordContent}
 				type="text"
 				name="form-content"
 				placeholder="Word content"
@@ -207,87 +195,43 @@ const EditWord = (
 							: content.replace(new RegExp(languageData.whitespaces, 'ug'), '')
 						: ''
 				}
-				style={{
-					backgroundColor: "#FFFFFFCC",
-					border: "none",
-					borderRadius: "0.5rem",
-					borderBottom: "1px solid black",
-					fontSize: "1.5rem",
-					width: "98.5%",
-					textAlign: "center",
-					marginBottom: "1rem",
-				}}
 				readOnly
 			/>
-			<span style={{ color: "#444444FF" }}>Dictionary entries:</span>
-			<div style={{
-				overflowY: 'auto',
-				maxHeight: '25vh',
-				padding: '3%',
-				borderLeft: "1px solid #DDDDEEFF",
-				marginLeft: "0.5rem",
-				marginBottom: "0.5rem",
-				width: "90%",
-			}}>
+			<span className={styles.entriesHeader}>Dictionary entries:</span>
+			<div className={styles.entriesContainer}>
 				{
 					(entries !== null) &&
 					entries.map(
 						(entry: Entry, index: number) => (
 							<React.Fragment key={uuid()}>
 								<div
-									style={{
-										display: "flex",
-										justifyContent: "space-between",
-										alignItems: "center",
-									}}
+									className={styles.entryContainer}
 								>
-									<div style={{ marginTop: "0.2rem", marginBottom: "0.2rem", width: "85%" }}>
+									<div className={styles.entryElement}>
 										<EntryElement
 											key={uuid()}
 											entry={entry}
 										/>
 									</div>
-									<div style={{
-										display: "flex",
-										flexDirection: "column",
-										justifyContent: "space-between",
-										gap: "0.5rem",
-									}}>
+									<div className={styles.entryButtons}>
 										<button
+											className={styles.deleteEntryButton}
 											type="button"
 											onClick={() => deleteEntry(index)}
-											style={{
-												backgroundColor: "#DD7777FF",
-												border: "none",
-												borderRadius: "0.25rem",
-												height: "1.5rem",
-												cursor: "pointer",
-											}}
 										>X</button>
 										{
 											(index === (entries.length - 1))
 											? (
 												<button
+													className={styles.addEntryButton}
 													type="button"
 													onClick={addEntry}
-													style={{
-														backgroundColor: "#AADDAAFF",
-														border: "none",
-														borderRadius: "0.25rem",
-														height: "1.5rem",
-														cursor: "pointer",
-													}}
 												>+</button>
 											)
 											: (
 												<button
+													className={styles.hiddenButton}
 													type="button"
-													style={{
-														backgroundColor: "transparent",
-														border: "none",
-														borderRadius: "0.25rem",
-														height: "1.5rem",
-													}}
 												></button>
 											)
 										}
@@ -300,45 +244,38 @@ const EditWord = (
 				}
 			</div>
 			<textarea
+				className={styles.notes}
 				name="notes"
 				placeholder="Notes"
 				value={
 					(notes !== null) ? notes : ''
 				}
 				onChange={e => setNotes(e.target.value)}
-				style={{
-					width: "97%",
-					backgroundColor: "#FFFFFFCC",
-					border: "none",
-					borderRadius: "0.5rem",
-					borderBottom: "1px solid #00000066",
-					padding: "0.33rem",
-					height: "3rem",
-					fontSize: "0.9rem",
-				}}
 			/>
 			<br />
-			<div style={{ display: "flex", gap: "1%", height: "3vh", marginTop: "0.5rem", flexWrap: "wrap" }}>
+			<div className={styles.statusButtonsContainer}>
 			{
 				[1, 2, 3, 4, 5, 99, 98].map(
 					(buttonStatus: number) => (
 						<button
+							className={
+								styles.statusButton
+									+ ' '
+									+ (
+										(buttonStatus === status)
+										? styles.statusButtonActive
+										: (buttonStatus === 99 || buttonStatus === 98)
+											? styles.statusButtonInactiveDefault
+											: styles.statusButtonInactiveTransparent
+									)
+							}
+							style={{
+								'--status': `var(--status${buttonStatus})`
+							} as React.CSSProperties}
 							key={uuid()}
 							disabled={areButtonsDisabled}
 							type="submit"
 							value={buttonStatus.toString()}
-							style={{
-								border: ((buttonStatus === status)
-									? "2px solid #AAAABBFF"
-									: (buttonStatus === 99 || buttonStatus === 98)
-										? "1px solid #DDDDEEFF"
-										: "1px solid transparent"
-								),
-								borderRadius: "0.25rem",
-								flex: 1,
-								backgroundColor: getStyle(buttonStatus),
-								cursor: "pointer",
-							}}
 						>{statusNames[buttonStatus]}</button>
 					)
 				)
